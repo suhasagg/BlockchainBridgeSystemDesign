@@ -17,7 +17,7 @@ To improve scalability, the bridge contract can use a sidechain or a layer 2 sca
 For security, a multi-sig mechanism can be implemented to ensure that the bridge contract is only accessible by authorized parties.
 
 
-# Vector Commitments in IBC - cosmos - sdk
+# Vector Commitments in IBC - Cosmos - Sdk
 
 
 In the context of Inter-Blockchain Communication (IBC) in the Cosmos SDK, vector commitments can be used in conjunction with Merkle hashes and sequence numbers to commit to and verify a set of packets in a packet queue.
