@@ -102,3 +102,21 @@ Use the model to calculate redemption rates: Once you have a trained and evaluat
 
 It's important to note that calculating the liquidity token IBC redemption rate using machine learning would likely require a large amount of data, as well as careful modeling and validation. Additionally, the model would need to be updated regularly to reflect changing market conditions and network usage patterns.
 
+
+# Amount of coins to mint per block using Machine Learning
+
+Deciding how many coins to mint per block using machine learning could be an interesting application, but it would require a significant amount of data and careful modeling. Here are some steps you could take:
+
+Collect and preprocess data: Gather data on past coin minting rates, as well as any other relevant data like token prices, network usage statistics, and economic indicators. Clean and preprocess the data to remove any missing values or outliers.
+
+Define the problem: Determine what specific problem you want to solve using the historical data. For example, you could try to predict the optimal coin minting rate for a given network, or identify which factors are most influential in determining the optimal minting rate.
+
+Choose a machine learning algorithm: Depending on the problem you are trying to solve, you may choose a regression or classification algorithm. Some popular machine learning algorithms for time series data include LSTM, ARIMA, and Prophet.
+
+Train the model: Split the data into training and testing sets, and use the training data to train the machine learning model. Use techniques like cross-validation and hyperparameter tuning to optimize the model's performance.
+
+Evaluate the model: Use the testing data to evaluate the performance of the machine learning model. Measure metrics like mean squared error, accuracy, or F1 score to determine how well the model is performing.
+
+Use the model to determine minting rate: Once you have a trained and evaluated machine learning model, you can use it to determine the optimal coin minting rate for a given period. This can help inform decisions about when to increase or decrease the minting rate, based on factors like network usage or market conditions.
+
+It's important to note that deciding how many coins to mint per block using machine learning would likely require a large amount of data, as well as careful modeling and validation. Additionally, the model would need to be updated regularly to reflect changing market conditions and network usage patterns.
