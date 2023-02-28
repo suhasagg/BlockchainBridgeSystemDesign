@@ -45,6 +45,7 @@ Overall, Tendermint allows for concurrent modification of the tree by multiple v
 
 # Optimise Bonding/UnBonding of Delegations using Machine Learning  
 
+1)
 
 Optimizing the bonding and unbonding process of a validator and delegator using historical bonding data can be achieved through a machine learning approach. Here is a possible high-level approach to achieve this:
 
@@ -64,6 +65,20 @@ Optimization: Continuously monitor the performance of the selected validators an
 
 To implement this approach in Python, one could use machine learning libraries such as Scikit-learn or TensorFlow. Additionally, one will need to use the Cosmos SDK to access the historical bonding data and interact with the network.
 
+2)
 
+Optimizing the bonding and unbonding process for validators and delegators using historical bonding data can be approached using machine learning techniques in Python. Here are some steps one could take:
 
+Collect and preprocess historical bonding data: Gather data on past bonding and unbonding events for each validator and delegator on the network. This data should include information on the amount of tokens bonded and unbonded, the time it took for the bonding and unbonding to complete, and any rewards earned during the bonding period. Clean and preprocess the data to remove any missing values or outliers.
 
+Define the problem: Determine what specific problem one want to solve using the historical data. For example, you could try to predict the optimal bonding time for a given delegator, or identify which validators are likely to provide the best rewards for a given amount of bonded tokens.
+
+Choose a machine learning algorithm: Depending on the problem you are trying to solve, you may choose a regression or classification algorithm. Some popular machine learning algorithms for time series data include LSTM, ARIMA, and Prophet.
+
+Train the model: Split the data into training and testing sets, and use the training data to train the machine learning model. Use techniques like cross-validation and hyperparameter tuning to optimize the model's performance.
+
+Evaluate the model: Use the testing data to evaluate the performance of the machine learning model. Measure metrics like mean squared error, accuracy, or F1 score to determine how well the model is performing.
+
+Use the model to optimize bonding and unbonding: Once you have a trained and evaluated machine learning model, you can use it to optimize the bonding and unbonding process for validators and delegators. For example, you could use the model to predict the optimal bonding time for a given delegator, or to identify which validators are likely to provide the best rewards for a given amount of bonded tokens.
+
+Overall, using machine learning to optimize the bonding and unbonding process can be a complex task, but it has the potential to improve the efficiency and profitability of the network for all participants.
