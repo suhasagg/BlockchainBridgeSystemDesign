@@ -86,7 +86,7 @@ Overall, using machine learning to optimize the bonding and unbonding process ca
 
 # Liquidity token Redemption rate, Redemption time determination
 
-Calculating the liquidity token IBC redemption rate using machine learning could be an interesting application, but it would require a significant amount of data and careful modeling. Here are some steps you could take:
+Calculating the liquidity token IBC redemption rate using machine learning could be an interesting application, but it would require a significant amount of data and careful modeling. Here are some steps one could take:
 
 Collect and preprocess data: Gather data on past liquidity token IBC redemption rates, as well as any other relevant data like token prices, trading volumes, or network usage statistics. Clean and preprocess the data to remove any missing values or outliers.
 
