@@ -105,7 +105,7 @@ It's important to note that calculating the liquidity token IBC redemption rate 
 
 # Amount of coins to mint per block using Machine Learning
 
-Deciding how many coins to mint per block using machine learning could be an interesting application, but it would require a significant amount of data and careful modeling. Here are some steps you could take:
+Deciding how many coins to mint per block using machine learning could be an interesting application, but it would require a significant amount of data and careful modeling. Here are some steps one could take:
 
 Collect and preprocess data: Gather data on past coin minting rates, as well as any other relevant data like token prices, network usage statistics, and economic indicators. Clean and preprocess the data to remove any missing values or outliers.
 
