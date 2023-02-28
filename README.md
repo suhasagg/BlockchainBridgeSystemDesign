@@ -36,7 +36,7 @@ In such scenarios, Tendermint uses a consensus algorithm that allows validators 
 
 If two or more validators propose conflicting blocks, the network will reach a state of disagreement, known as a fork. To resolve the fork, the consensus algorithm uses a process called the longest chain rule. This rule states that the chain with the most validated blocks is considered the correct chain, and all other forks are discarded.
 
-During the validation process, if multiple validators attempt to modify the same part of the state tree simultaneously, Tendermint ensures that only one modification is accepted. This is achieved by using a process called block replay, as described in my previous answer. By using block replay, Tendermint ensures that concurrent modifications are handled appropriately, and the state of the system remains consistent.
+During the validation process, if multiple validators attempt to modify the same part of the state tree simultaneously, Tendermint ensures that only one modification is accepted. This is achieved by using a process called block replay. By using block replay, Tendermint ensures that concurrent modifications are handled appropriately, and the state of the system remains consistent.
 
 Overall, Tendermint allows for concurrent modification of the tree by multiple validators by using a consensus algorithm and a process called block replay to handle conflicts and ensure consistency.
 
