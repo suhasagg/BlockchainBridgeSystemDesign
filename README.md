@@ -1,4 +1,4 @@
-# BlockchainBridgeSystemDesign
+Zee# BlockchainBridgeSystemDesign
 
 A blockchain bridge system is a system that allows for the transfer of assets between different blockchain networks. Here is a prototype design for such a system:
 
@@ -140,4 +140,37 @@ Evaluate the model: Use the testing data to evaluate the performance of the mach
 Use the model to optimize IAVL tree version pruning: Once you have a trained and evaluated machine learning model, you can use it to optimize the pruning process. For example, you could use the model to identify which versions are the most frequently accessed and should be retained, or you could use it to determine an optimal memory usage threshold for pruning.
 
 It's important to note that using machine learning for IAVL tree version pruning and memory optimization would require a large amount of data, as well as careful modeling and validation. Additionally, the model would need to be regularly updated to reflect changing system usage patterns and memory constraints.
+
+
+
+
+# Custom IBC Module 
+
+Here is a high-level overview of the steps involved in creating a custom IBC module:
+
+Define the module: Define the module by creating a new module directory in the x directory of your Cosmos SDK application. Within this directory, create a types.go file to define the types that will be used in the module.
+
+Define the messages: Define the messages that will be used in the module by creating a messages.go file. These messages should conform to the IBC protocol and specify how the module will interact with other modules in the system.
+
+Define the handler functions: Define the handler functions that will be used to process incoming messages. These functions should be defined in a handler.go file and should implement the sdk.Handler interface.
+
+Define the querier functions: Define the querier functions that will be used to retrieve data from the module. These functions should be defined in a querier.go file and should implement the sdk.Querier interface.
+
+Define the keeper: Define the keeper that will be used to manage the module's state. This should be defined in a keeper.go file and should implement the sdk.Keeper interface.
+
+Define the module app: Define the module app that will be used to manage the module's lifecycle. This should be defined in a module.go file and should implement the sdk.Module interface.
+
+Register the module: Register the module with the Cosmos SDK by adding the module to the app.go file and initializing it in the NewApp function.
+
+Implement the IBC interface: Implement the IBC interface by defining the functions required by the IBC protocol. These functions should be defined in a ibc.go file.
+
+Implement the client interface: Implement the client interface by defining the functions required to manage client connections. These functions should be defined in a client.go file.
+
+Implement the connection interface: Implement the connection interface by defining the functions required to manage connections between modules. These functions should be defined in a connection.go file.
+
+Implement the channel interface: Implement the channel interface by defining the functions required to manage channels between modules. These functions should be defined in a channel.go file.
+
+Implement the packet interface: Implement the packet interface by defining the functions required to manage packets between modules. These functions should be defined in a packet.go file.
+
+Once these steps are completed, the custom IBC module can be built and deployed as part of a Cosmos SDK application. It is important to test the module thoroughly and ensure that it conforms to the IBC protocol and integrates properly with other modules in the system.
 
