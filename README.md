@@ -175,7 +175,7 @@ Implement the packet interface: Implement the packet interface by defining the f
 Once these steps are completed, the custom IBC module can be built and deployed as part of a Cosmos SDK application. It is important to test the module thoroughly and ensure that it conforms to the IBC protocol and integrates properly with other modules in the system.
 
 
-# Transient store to optimise gas usage 
+# Transient store - COSMOS SDK to optimise gas usage 
 
 Here's an example scenario where using the transient store in Cosmos SDK can save gas usage:
 
