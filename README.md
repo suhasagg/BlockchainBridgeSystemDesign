@@ -1,4 +1,4 @@
-Zee# BlockchainBridgeSystemDesign
+# BlockchainBridgeSystemDesign
 
 A blockchain bridge system is a system that allows for the transfer of assets between different blockchain networks. Here is a prototype design for such a system:
 
@@ -173,4 +173,17 @@ Implement the channel interface: Implement the channel interface by defining the
 Implement the packet interface: Implement the packet interface by defining the functions required to manage packets between modules. These functions should be defined in a packet.go file.
 
 Once these steps are completed, the custom IBC module can be built and deployed as part of a Cosmos SDK application. It is important to test the module thoroughly and ensure that it conforms to the IBC protocol and integrates properly with other modules in the system.
+
+
+# Transient store to optimise gas usage 
+
+Here's an example scenario where using the transient store in Cosmos SDK can save gas usage:
+
+Suppose you have a module that needs to perform some expensive calculation during the execution of a transaction. The result of this calculation is only needed during the execution of that transaction and doesn't need to be stored permanently on the blockchain.
+
+If one were to store the result in the module's state, it would consume unnecessary storage space and increase the gas cost of the transaction.
+
+Instead, you can use the transient store to store the result of the calculation during the execution of the transaction, and retrieve it later when needed.
+
+
 
