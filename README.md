@@ -408,9 +408,12 @@ func NewHandler(k Keeper) sdk.Handler {
         }
     }
 }
-```go
+
 With the completed implementation above, one can now create and send MsgCookieSync messages to synchronize cookie data across chains using IBC-go.
 
+# DDX + Liquid staking + Synthetic Assets  
+
+```go
 
 Decentralized data exchanges (DDXs) are platforms that allow users to securely and anonymously exchange data without relying on a centralized authority. In a DDX, users can share their data with others in exchange for tokens or other forms of compensation. However, in order to ensure the security and reliability of the exchange, the DDX needs to have a robust and reliable staking mechanism.
 
