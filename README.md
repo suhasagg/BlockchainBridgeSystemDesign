@@ -207,7 +207,7 @@ Governance and updates: Implement a governance mechanism to manage updates to th
 
 By following these steps, one can create a data sharing application on top of the IBC framework that enables cross-chain data exchange and access. This can be particularly useful in scenarios where multiple blockchains need to collaborate or access data from other ecosystems, such as in DeFi, NFTs, supply chain management, or data marketplaces.
 
-# A cookie sync application 
+# A cookie sync application using IBC-GO
 
 Define the data structures: Start by defining the data structures required to represent the cookies and other relevant information. This could include specific data formats, schemas, or data types that are agreed upon by the participating chains.
 
