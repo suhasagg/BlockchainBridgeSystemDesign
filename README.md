@@ -409,7 +409,7 @@ func NewHandler(k Keeper) sdk.Handler {
     }
 }
 ```go
-With the completed implementation above, you can now create and send MsgCookieSync messages to synchronize cookie data across chains using IBC-go.
+With the completed implementation above, one can now create and send MsgCookieSync messages to synchronize cookie data across chains using IBC-go.
 
 
 
