@@ -186,7 +186,7 @@ If one were to store the result in the module's state, it would consume unnecess
 Instead, you can use the transient store to store the result of the calculation during the execution of the transaction, and retrieve it later when needed.
 
 
-#Decentralised exchange IBC-Go
+# Decentralised exchange IBC-Go
 
 A data sharing application built on the IBC framework would allow different blockchains to exchange and access data in a decentralized and secure manner. This could be particularly useful for cross-chain applications that require access to data from multiple blockchains or for sharing data between different ecosystems. Here's an outline of how a data sharing application could be designed using IBC:
 
