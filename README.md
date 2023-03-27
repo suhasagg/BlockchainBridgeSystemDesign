@@ -186,4 +186,231 @@ If one were to store the result in the module's state, it would consume unnecess
 Instead, you can use the transient store to store the result of the calculation during the execution of the transaction, and retrieve it later when needed.
 
 
+#Decentralised exchange IBC-Go
+
+A data sharing application built on the IBC framework would allow different blockchains to exchange and access data in a decentralized and secure manner. This could be particularly useful for cross-chain applications that require access to data from multiple blockchains or for sharing data between different ecosystems. Here's an outline of how a data sharing application could be designed using IBC:
+
+Data structures: Define the data structures required to represent the data being shared. This could include specific data formats, schemas, or data types that are agreed upon by the participating chains.
+
+IBC packets: Design custom IBC packets that will be used to transmit the data between the participating chains. These packets would include the necessary data fields and metadata to ensure proper routing and data integrity.
+
+IBC handlers: Implement custom IBC handlers for the data sharing application. This would include:
+a. OnRecvPacket: Processes incoming data packets and stores the received data on the destination chain.
+b. OnAcknowledgementPacket: Processes acknowledgements from the destination chain, confirming successful data transfer or reporting errors.
+c. OnTimeoutPacket: Handles packet timeouts, which may occur if the destination chain does not acknowledge the packet within the specified time frame.
+
+Access control: Implement access control mechanisms to ensure that only authorized parties can access the shared data. This could involve authentication, authorization, and encryption techniques to protect the data from unauthorized access.
+
+Querying and retrieval: Design and implement a querying mechanism that allows users to access and retrieve the shared data on the participating chains. This could involve creating APIs, SDKs, or other tools to facilitate data access.
+
+Governance and updates: Implement a governance mechanism to manage updates to the data sharing application, such as adding new data types, changing access controls, or modifying the underlying data structures.
+
+By following these steps, one can create a data sharing application on top of the IBC framework that enables cross-chain data exchange and access. This can be particularly useful in scenarios where multiple blockchains need to collaborate or access data from other ecosystems, such as in DeFi, NFTs, supply chain management, or data marketplaces.
+
+# A cookie sync application 
+
+Define the data structures: Start by defining the data structures required to represent the cookies and other relevant information. This could include specific data formats, schemas, or data types that are agreed upon by the participating chains.
+
+type Cookie struct {
+    ID          string
+    Domain      string
+    Data        string
+    Expiration  time.Time
+}
+Define custom IBC packets: Create custom IBC packets to transmit the cookie data between the participating chains. These packets would include the necessary data fields and metadata to ensure proper routing and data integrity.
+
+type CookieSyncPacket struct {
+    Cookie      Cookie
+    SourceChain string
+    DestChain   string
+}
+Implement the IBC handlers: Develop custom IBC handlers for the cookie sync application. This would include:
+a. OnRecvPacket: Processes incoming cookie sync packets and stores the received cookie data on the destination chain.
+b. OnAcknowledgementPacket: Processes acknowledgements from the destination chain, confirming successful cookie sync or reporting errors.
+c. OnTimeoutPacket: Handles packet timeouts, which may occur if the destination chain does not acknowledge the packet within the specified time frame.
+
+Implement the module: Create a new module for the cookie sync application, including the message types, keeper, and handlers. This module would be responsible for managing the cookies and their synchronization between the participating chains.
+
+Integrate with IBC-go: Integrate the new cookie sync module with the IBC-go framework, ensuring that the custom packets and handlers are registered and properly routed between the chains.
+
+Implement the application logic: Develop the application logic for cookie synchronization, including initiating cookie sync requests, handling incoming sync packets, and managing the storage and retrieval of cookies on the participating chains.
+
+Develop a user interface or API: Create a user interface or API for users to interact with the cookie sync application, allowing them to initiate sync requests, view the status of ongoing syncs, and manage their cookies across the participating chains.
+
+
+Define the data structures:
+
+``go``
+package types
+
+import (
+    "time"
+)
+
+type Cookie struct {
+    ID          string
+    Domain      string
+    Data        string
+    Expiration  time.Time
+}
+
+type CookieSyncPacketData struct {
+    Cookie      Cookie
+    SourceChain string
+    DestChain   string
+}
+
+Define the custom IBC packets:
+
+package types
+
+import (
+    "encoding/json"
+    "github.com/cosmos/ibc-go/v2/modules/core/exported"
+)
+
+func (csp CookieSyncPacketData) GetBytes() []byte {
+    data, _ := json.Marshal(csp)
+    return data
+}
+
+func (csp CookieSyncPacketData) ValidateBasic() error {
+    if csp.Cookie.ID == "" || csp.SourceChain == "" || csp.DestChain == "" {
+        return exported.ErrInvalidPacketData
+    }
+    return nil
+}
+
+func NewCookieSyncPacketData(cookie Cookie, sourceChain, destChain string) CookieSyncPacketData {
+    return CookieSyncPacketData{
+        Cookie:      cookie,
+        SourceChain: sourceChain,
+        DestChain:   destChain,
+    }
+}
+
+Implement the IBC handlers:
+
+package cookiesync
+
+import (
+    "github.com/cosmos/ibc-go/v2/modules/core/04-channel/keeper"
+    "github.com/cosmos/ibc-go/v2/modules/core/04-channel/types"
+    "github.com/cosmos/ibc-go/v2/modules/core/exported"
+    "github.com/suhasagg/cookiesyncapp/x/cookiesync/types"
+)
+
+func (k Keeper) OnRecvPacket(ctx sdk.Context, packet exported.PacketI, data types.CookieSyncPacketData) error {
+    // Store the received cookie data on the destination chain
+    k.AppendCookie(ctx, data.Cookie)
+    return nil
+}
+
+func (k Keeper) OnAcknowledgementPacket(ctx sdk.Context, packet exported.PacketI, data types.CookieSyncPacketData, ack exported.Acknowledgement) error {
+    // Process acknowledgements from the destination chain
+    return nil
+}
+
+func (k Keeper) OnTimeoutPacket(ctx sdk.Context, packet exported.PacketI, data types.CookieSyncPacketData) error {
+    // Handle packet timeouts
+    return nil
+}
+
+func NewKeeper(channelKeeper keeper.Keeper) Keeper {
+    return Keeper{
+        channelKeeper: channelKeeper,
+    }
+}
+
+Implement the module:
+Define the Msg type for initiating cookie sync:
+
+package types
+
+import (
+    sdk "github.com/cosmos/cosmos-sdk/types"
+)
+
+type MsgCookieSync struct {
+    SourcePort    string
+    SourceChannel string
+    Cookie        Cookie
+    Signer        sdk.AccAddress
+}
+
+Implement the message handlers:
+
+package cookiesync
+
+import (
+    sdk "github.com/cosmos/cosmos-sdk/types"
+    "github.com/cosmos/ibc-go/v2/modules/core/04-channel/keeper"
+    "github.com/yourusername/yourapp/x/cookiesync/types"
+)
+
+func handleMsgCookieSync(ctx sdk.Context, k Keeper, msg *types.MsgCookieSync) (*sdk.Result, error) {
+    sourceChain := ctx.ChainID()
+    destChain := msg.Cookie.Domain
+
+    // Create a new IBC packet for cookie sync
+    packetData := types.NewCookieSyncPacketData(msg.Cookie, sourceChain, destChain)
+
+    // Send the packet
+    err := k.channelKeeper.SendPacket(ctx, channelCap, packetData.Packet())
+    if err != nil
+
+
+
+func handleMsgCookieSync(ctx sdk.Context, k Keeper, msg *types.MsgCookieSync) (*sdk.Result, error) {
+    sourceChain := ctx.ChainID()
+    destChain := msg.Cookie.Domain
+
+    // Create a new IBC packet for cookie sync
+    packetData := types.NewCookieSyncPacketData(msg.Cookie, sourceChain, destChain)
+
+    // Get the port and channel capability
+    channelCap, err := k.scopedKeeper.GetCapability(ctx, host.ChannelCapabilityPath(msg.SourcePort, msg.SourceChannel))
+    if err != nil {
+        return nil, sdkerrors.Wrapf(channel.ErrChannelCapabilityNotFound, "unable to get channel capability, port: %s, channel: %s", msg.SourcePort, msg.SourceChannel)
+    }
+
+    // Send the packet
+    err = k.channelKeeper.SendPacket(ctx, channelCap, packetData.Packet())
+    if err != nil {
+        return nil, sdkerrors.Wrapf(err, "failed to send IBC packet, source port: %s, source channel: %s", msg.SourcePort, msg.SourceChannel)
+    }
+
+    return &sdk.Result{
+        Events: ctx.EventManager().Events().AppendEvents(
+            sdk.Events{
+                sdk.NewEvent(
+                    types.EventTypeCookieSync,
+                    sdk.NewAttribute(types.AttributeKeySourcePort, msg.SourcePort),
+                    sdk.NewAttribute(types.AttributeKeySourceChannel, msg.SourceChannel),
+                    sdk.NewAttribute(types.AttributeKeySigner, msg.Signer.String()),
+                ),
+            },
+        ),
+    }, nil
+}
+
+With the above implementation, the handleMsgCookieSync function sends an IBC packet containing the cookie data to the destination chain. The events are recorded, and the result is returned.
+
+
+func NewHandler(k Keeper) sdk.Handler {
+    return func(ctx sdk.Context, msg sdk.Msg) (*sdk.Result, error) {
+        ctx = ctx.WithEventManager(sdk.NewEventManager())
+        switch msg := msg.(type) {
+        case *types.MsgCookieSync:
+            return handleMsgCookieSync(ctx, k, msg)
+        default:
+            return nil, sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized %s message type: %T", types.ModuleName, msg)
+        }
+    }
+}
+``go``
+With the completed implementation above, you can now create and send MsgCookieSync messages to synchronize cookie data across chains using IBC-go.
+
+
+
 
