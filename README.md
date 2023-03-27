@@ -410,6 +410,7 @@ func NewHandler(k Keeper) sdk.Handler {
 }
 
 With the completed implementation above, one can now create and send MsgCookieSync messages to synchronize cookie data across chains using IBC-go.
+```
 
 # DDX + Liquid staking + Synthetic Assets  
 
@@ -896,4 +897,4 @@ func emitApprovalEvent(ctx contractpb.Context, from, spender loom.Address, uniqu
 }
 
 var Contract plugin.Contract = contract.MakePlugin(&PersonaCoin{})
-```go
+```
