@@ -899,3 +899,76 @@ func emitApprovalEvent(ctx contractpb.Context, from, spender loom.Address, uniqu
 
 var Contract plugin.Contract = contract.MakePlugin(&PersonaCoin{})
 ```
+
+# Interoperable persona coin chain transfers using loom network - transfer gateway
+
+To create an interoperable Persona Coin transfer using Loom Network's Transfer Gateway. This example demonstrates how to make a deposit and withdrawal of Persona Coin tokens across different chains.
+
+First, you need to create a mapping for your Persona Coin contract on the Loom Network's Transfer Gateway. This mapping helps the gateway recognize the token's contract addresses on different chains (e.g., Ethereum mainnet, Loom Network, and others).
+
+After setting up the mapping, you can use the following code snippets for deposit and withdrawal.
+
+Deposit tokens from Ethereum mainnet to Loom Network:
+
+const Web3 = require('web3');
+const { CryptoUtils } = require('loom-js');
+const { LocalAddress, Client, LoomProvider } = require('loom-js');
+
+// Initialize Web3 providers for Ethereum mainnet and Loom Network
+const mainnetWeb3 = new Web3('<ETHEREUM_MAINNET_WEB3_PROVIDER>');
+const loomWeb3 = new Web3(new LoomProvider(new Client(), CryptoUtils.generatePrivateKey()));
+
+// Replace these with your contract addresses
+const personaCoinMainnetAddress = '0x<PERSONA_COIN_MAINNET_CONTRACT_ADDRESS>';
+const personaCoinLoomAddress = '0x<PERSONA_COIN_LOOM_CONTRACT_ADDRESS>';
+
+// Replace with your wallet address
+const userAddress = '<YOUR_WALLET_ADDRESS>';
+
+// Set up the ERC20 ABI
+const personaCoinABI = [/* Persona Coin ABI here */];
+
+// Initialize the contracts
+const personaCoinMainnet = new mainnetWeb3.eth.Contract(personaCoinABI, personaCoinMainnetAddress);
+const personaCoinLoom = new loomWeb3.eth.Contract(personaCoinABI, personaCoinLoomAddress);
+
+async function depositTokens(amount) {
+  // Approve the transfer gateway to transfer tokens on your behalf
+  await personaCoinMainnet.methods.approve('0x<TRANSFER_GATEWAY_MAINNET_ADDRESS>', amount)
+    .send({ from: userAddress });
+
+  // Deposit tokens to Loom Network
+  await personaCoinLoom.methods.deposit(amount)
+    .send({ from: userAddress });
+}
+
+depositTokens(1000);
+
+
+# Withdraw tokens from Loom Network to Ethereum mainnet:
+
+
+
+async function withdrawTokens(amount) {
+  // Request a withdrawal from the Loom Network
+  await personaCoinLoom.methods.withdraw(amount)
+    .send({ from: userAddress });
+
+  // Wait for the withdrawal to be processed by the Loom Network's Transfer Gateway (use events or polling)
+
+  // Get the withdrawal receipt
+  const withdrawalReceipt = await personaCoinLoom.methods.getWithdrawalReceipt(userAddress).call();
+
+  // Withdraw tokens to Ethereum mainnet
+  await personaCoinMainnet.methods.withdraw(withdrawalReceipt)
+    .send({ from: userAddress });
+}
+
+withdrawTokens(1000);
+
+The depositTokens and withdrawTokens functions in the code snippets above demonstrate how to transfer Persona Coins between the Ethereum mainnet and Loom Network using the Loom Network's Transfer Gateway. .
+
+
+
+
+
