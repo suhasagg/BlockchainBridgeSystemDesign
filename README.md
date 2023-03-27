@@ -910,6 +910,8 @@ After setting up the mapping, you can use the following code snippets for deposi
 
 Deposit tokens from Ethereum mainnet to Loom Network:
 
+```javascript
+
 const Web3 = require('web3');
 const { CryptoUtils } = require('loom-js');
 const { LocalAddress, Client, LoomProvider } = require('loom-js');
@@ -947,7 +949,7 @@ depositTokens(1000);
 
 # Withdraw tokens from Loom Network to Ethereum mainnet:
 
-
+```javascript
 
 async function withdrawTokens(amount) {
   // Request a withdrawal from the Loom Network
