@@ -412,7 +412,7 @@ func NewHandler(k Keeper) sdk.Handler {
 With the completed implementation above, one can now create and send MsgCookieSync messages to synchronize cookie data across chains using IBC-go.
 ```
 
-# DDX + Liquid staking + Synthetic Assets  
+# DDX + Liquid staking + Synthetic Assets using Tendermint (IBC-go)
 
 ```go
 
