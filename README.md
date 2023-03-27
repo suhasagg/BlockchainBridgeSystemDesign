@@ -906,7 +906,7 @@ To create an interoperable Persona Coin transfer using Loom Network's Transfer G
 
 First, you need to create a mapping for your Persona Coin contract on the Loom Network's Transfer Gateway. This mapping helps the gateway recognize the token's contract addresses on different chains (e.g., Ethereum mainnet, Loom Network, and others).
 
-After setting up the mapping, you can use the following code snippets for deposit and withdrawal.
+After setting up the mapping, one can use the following code snippets for deposit and withdrawal.
 
 Deposit tokens from Ethereum mainnet to Loom Network:
 
