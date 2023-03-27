@@ -699,14 +699,15 @@ if err != nil {
     // handle error
 }
 
-'''go
+
 
 In this example, we are minting 100,000,000 sETH tokens to the sender address. The MintSynthAsset() function calculates the required amount of collateral tokens and transfers them from the sender to the synthetic asset module account before mint.
 
+# Persona coin using loom network
 
 ```go
 
-Persona coin using loom network
+
 
 package main
 
