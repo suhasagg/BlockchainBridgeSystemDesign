@@ -704,7 +704,192 @@ if err != nil {
 In this example, we are minting 100,000,000 sETH tokens to the sender address. The MintSynthAsset() function calculates the required amount of collateral tokens and transfers them from the sender to the synthetic asset module account before mint.
 
 
+```go
+
+Persona coin using loom network
+
+package main
+
+import (
+	"errors"
+	"fmt"
+
+	"github.com/loomnetwork/go-loom"
+	"github.com/loomnetwork/go-loom/plugin"
+	"github.com/loomnetwork/go-loom/plugin/contractpb"
+	"github.com/loomnetwork/go-loom/types"
+)
+
+const (
+	SyncEventTopic       = "event:Sync"
+	ApprovalEventTopic   = "event:Approval"
+)
+
+type PersonaCoin struct {
+}
+
+type PublisherAccount struct {
+	Owner   *types.Address
+	Uniques *types.BigUInt
+}
+
+type UniquesAllowance struct {
+	Owner   *types.Address
+	Spender *types.Address
+	Uniques *types.BigUInt
+}
+
+type SyncRequest struct {
+	To     *types.Address
+	Uniques *types.BigUInt
+}
+
+type SyncEvent struct {
+	FromPublisher *types.Address
+	ToPublisher   *types.Address
+	Uniques       *types.BigUInt
+}
+
+type ApprovalEvent struct {
+	FromPublisher *types.Address
+	Spender       *types.Address
+	Uniques       *types.BigUInt
+}
+
+type ApprovalRequest struct {
+	Spender *types.Address
+	Uniques *types.BigUInt
+}
+
+func (c *PersonaCoin) Meta() (plugin.Meta, error) {
+	return plugin.Meta{
+		Name:    "PersonaCoin",
+		Version: "1.0.0",
+	}, nil
+}
+
+func (c *PersonaCoin) Init(ctx contractpb.Context, req *plugin.Request) error {
+	return nil
+}
+
+func (c *PersonaCoin) Sync(ctx contractpb.Context, req *SyncRequest) error {
+	fromPublisher := ctx.Message().Sender
+	toPublisher := req.To
+
+	fromPublisherAccount, err := loadPublisher(ctx, fromPublisher)
+	if err != nil {
+		return err
+	}
+
+	uniques := req.Uniques.Value
+	fromPublisherUniques := fromPublisherAccount.Uniques.Value
+
+	if fromPublisherUniques.Cmp(&uniques) < 0 {
+		return errors.New("sender uniques is too low")
+	}
+
+	fromPublisherUniques.Sub(&fromPublisherUniques, &uniques)
+	fromPublisherAccount.Uniques.Value = fromPublisherUniques
+
+	err = savePublisher(ctx, fromPublisherAccount)
+	if err != nil {
+		return err
+	}
+
+	toPublisherAccount, err := loadPublisher(ctx, toPublisher)
+	if err != nil {
+		return err
+	}
+
+	toUniques := toPublisherAccount.Uniques.Value
+	toUniques.Add(&toUniques, &uniques)
+	toPublisherAccount.Uniques.Value = toUniques
+
+	err = savePublisher(ctx, toPublisherAccount)
+	if err != nil {
+		return err
+	}
+
+	return emitSyncEvent(ctx, fromPublisher, toPublisher, &uniques)
+}
+
+func (c *PersonaCoin) Approve(ctx contractpb.Context, req *ApprovalRequest) error {
+	fromPublisher := ctx.Message().Sender
+	spender := req.Spender
+
+	allow, err := loadUniquesAllowance(ctx, fromPublisher, spender)
+	if err != nil {
+		return err
+	}
+
+	allow.Uniques = req.Uniques
+	err = saveUniquesAllowance(ctx, allow)
+	if err != nil {
+		return err
+	}
+
+	var uniques *types.BigUInt
+	if req.Uniques != nil {
+		uniques = &req.Uniques.Value
+	}
+	return emitApprovalEvent(ctx, fromPublisher, spender, uniques)
+}
 
 
+func loadPublisher(ctx contractpb.StaticContext, owner loom.Address) (*PublisherAccount, error) {
+	account := &PublisherAccount{
+		Owner: owner.MarshalPB(),
+		Uniques: &types.BigUInt{
+			Value: *loom.NewBigUIntFromInt(0),
+		},
+	}
+	err := ctx.Get(loom.Key(owner.String()), account)
+	if err != nil && err != contractpb.ErrNotFound {
+		return nil, err
+	}
+	return account, nil
+}
 
+func savePublisher(ctx contractpb.Context, account *PublisherAccount) error {
+	return ctx.Set(loom.Key(account.Owner.String()), account)
+}
 
+func loadUniquesAllowance(ctx contractpb.StaticContext, owner, spender loom.Address) (*UniquesAllowance, error) {
+	allowance := &UniquesAllowance{
+		Owner:   owner.MarshalPB(),
+		Spender: spender.MarshalPB(),
+		Uniques: &types.BigUInt{
+			Value: *loom.NewBigUIntFromInt(0),
+		},
+	}
+	err := ctx.Get(loom.Key(owner.String(), spender.String()), allowance)
+	if err != nil && err != contractpb.ErrNotFound {
+		return nil, err
+	}
+	return allowance, nil
+}
+
+func saveUniquesAllowance(ctx contractpb.Context, allowance *UniquesAllowance) error {
+	return ctx.Set(loom.Key(allowance.Owner.String(), allowance.Spender.String()), allowance)
+}
+
+func emitSyncEvent(ctx contractpb.Context, from, to loom.Address, uniques *loom.BigUInt) error {
+	ev := &SyncEvent{
+		FromPublisher: from.MarshalPB(),
+		ToPublisher:   to.MarshalPB(),
+		Uniques:       &types.BigUInt{Value: *uniques},
+	}
+	return ctx.EmitTopics(ev, SyncEventTopic)
+}
+
+func emitApprovalEvent(ctx contractpb.Context, from, spender loom.Address, uniques *loom.BigUInt) error {
+	ev := &ApprovalEvent{
+		FromPublisher: from.MarshalPB(),
+		Spender:       spender.MarshalPB(),
+		Uniques:       &types.BigUInt{Value: *uniques},
+	}
+	return ctx.EmitTopics(ev, ApprovalEventTopic)
+}
+
+var Contract plugin.Contract = contract.MakePlugin(&PersonaCoin{})
+```go
