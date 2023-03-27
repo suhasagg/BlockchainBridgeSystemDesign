@@ -240,7 +240,7 @@ Develop a user interface or API: Create a user interface or API for users to int
 
 Define the data structures:
 
-``go``
+```go``
 package types
 
 import (
@@ -408,7 +408,7 @@ func NewHandler(k Keeper) sdk.Handler {
         }
     }
 }
-``go``
+```go``
 With the completed implementation above, you can now create and send MsgCookieSync messages to synchronize cookie data across chains using IBC-go.
 
 
