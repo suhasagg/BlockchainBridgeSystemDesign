@@ -971,6 +971,157 @@ withdrawTokens(1000);
 The depositTokens and withdrawTokens functions in the code snippets above demonstrate how to transfer Persona Coins between the Ethereum mainnet and Loom Network using the Loom Network's Transfer Gateway. .
 
 
+# Transfer gateway code for Loom Network and Cosmos 
+
+Loom network side:
+
+pragma solidity ^0.8.0;
+
+interface IERC20 {
+    function transferFrom(address from, address to, uint256 value) external returns (bool);
+    function transfer(address to, uint256 value) external returns (bool);
+}
+
+contract LoomTransferGateway {
+    address public admin;
+    IERC20 public token;
+    
+    // Locked balances
+    mapping(address => uint256) public lockedBalances;
+
+    event Locked(address indexed user, uint256 amount);
+    event Released(address indexed user, uint256 amount);
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Only admin can perform this");
+        _;
+    }
+
+    constructor(address _tokenAddress) {
+        admin = msg.sender;
+        token = IERC20(_tokenAddress);
+    }
+
+    function lockTokens(address from, uint256 amount) external {
+        // Transfer tokens to this contract
+        require(token.transferFrom(from, address(this), amount), "Token transfer failed");
+        
+        // Update locked balance
+        lockedBalances[from] += amount;
+        
+        emit Locked(from, amount);
+    }
+
+    function releaseTokens(address to, uint256 amount) external onlyAdmin {
+        require(lockedBalances[to] >= amount, "Insufficient locked balance");
+
+        // Update locked balance
+        lockedBalances[to] -= amount;
+
+        // Transfer tokens from this contract to the recipient
+        require(token.transfer(to, amount), "Token transfer failed");
+
+        emit Released(to, amount);
+    }
+
+    // Function to update admin, if necessary.
+    function setAdmin(address _newAdmin) external onlyAdmin {
+        admin = _newAdmin;
+    }
+}
+
+
+Cosmos Side:
+
+Cosmos SDK module - loomtransfer:
+
+Define Store Key:
+
+package loomtransfer
+
+const (
+    StoreKey = "loomtransfer"
+)
+
+Define state structure:
+
+type LoomTransferState struct {
+    LockedBalances map[string]uint64
+}
+
+Define message type:
+
+type MsgLockAssets struct {
+    User   sdk.AccAddress
+    Amount sdk.Coin
+}
+
+Implement the Msg interface for MsgLockAssets:
+
+func (msg MsgLockAssets) Route() string { return "loomtransfer" }
+func (msg MsgLockAssets) Type() string  { return "lock_assets" }
+// ... (other necessary implementations like ValidateBasic, GetSignBytes, GetSigners)
+
+
+Define a Keeper:
+
+type Keeper struct {
+    storeKey  sdk.StoreKey
+    cdc       *codec.Codec
+    bankKeeper types.BankKeeper
+}
+
+func (k Keeper) LockAssets(ctx sdk.Context, user sdk.AccAddress, amount sdk.Coin) {
+    // Code to lock assets using the bankKeeper to debit user account
+    // and updating the module's state to reflect the locked asset.
+}
+
+Message Handler:
+
+func NewHandler(k Keeper) sdk.Handler {
+    return func(ctx sdk.Context, msg sdk.Msg) sdk.Result {
+        switch msg := msg.(type) {
+        case MsgLockAssets:
+            return handleMsgLockAssets(ctx, k, msg)
+        default:
+            errMsg := fmt.Sprintf("unrecognized %s message type: %T", RouterKey, msg)
+            return sdk.ErrUnknownRequest(errMsg).Result()
+        }
+    }
+}
+
+func handleMsgLockAssets(ctx sdk.Context, k Keeper, msg MsgLockAssets) sdk.Result {
+    err := k.LockAssets(ctx, msg.User, msg.Amount)
+    if err != nil {
+        return err.Result()
+    }
+    // Return some result
+}
+
+
+type LoomTransferGatewayModule struct {
+    LoomContractAddress string
+    LockedBalances      map[string]uint256 
+}
+
+func (m *LoomTransferGatewayModule) LockAssets(user string, amount uint256) {
+    if GetUserBalance(user) < amount {
+        panic("Insufficient balance")
+    }
+    DeductFromUserBalance(user, amount)
+    m.LockedBalances[user] += amount
+    EmitEvent("AssetLocked", user, amount)
+}
+
+func (m *LoomTransferGatewayModule) UnlockAssets(user string, amount uint256) {
+    if m.LockedBalances[user] < amount {
+        panic("Insufficient locked balance")
+    }
+    AddToUserBalance(user, amount)
+    m.LockedBalances[user] -= amount
+    EmitEvent("AssetUnlocked", user, amount)
+}
+
 
 
 
