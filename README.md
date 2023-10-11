@@ -971,10 +971,13 @@ withdrawTokens(1000);
 The depositTokens and withdrawTokens functions in the code snippets above demonstrate how to transfer Persona Coins between the Ethereum mainnet and Loom Network using the Loom Network's Transfer Gateway. .
 
 
-# Transfer gateway code for Loom Network and Cosmos 
 
-Loom network side:
-```
+
+## Transfer Gateway Code for Loom Network and Cosmos 🌐
+
+### 🚀 Loom Network Side:
+
+```solidity
 pragma solidity ^0.8.0;
 
 interface IERC20 {
@@ -986,7 +989,7 @@ contract LoomTransferGateway {
     address public admin;
     IERC20 public token;
     
-    // Locked balances
+    // 🔒 Locked balances
     mapping(address => uint256) public lockedBalances;
 
     event Locked(address indexed user, uint256 amount);
@@ -1024,48 +1027,42 @@ contract LoomTransferGateway {
         emit Released(to, amount);
     }
 
-    // Function to update admin, if necessary.
+    // 🔄 Function to update admin, if necessary.
     function setAdmin(address _newAdmin) external onlyAdmin {
         admin = _newAdmin;
     }
 }
 ```
 
-Cosmos Side:
+### 🌌 Cosmos Side:
 
-Cosmos SDK module - loomtransfer:
+#### Cosmos SDK module - `loomtransfer`:
 
 ```go
-Define Store Key:
-
+// 🛠 Define Store Key:
 package loomtransfer
 
 const (
     StoreKey = "loomtransfer"
 )
 
-Define state structure:
-
+// 📝 Define state structure:
 type LoomTransferState struct {
     LockedBalances map[string]uint64
 }
 
-Define message type:
-
+// 💌 Define message type:
 type MsgLockAssets struct {
     User   sdk.AccAddress
     Amount sdk.Coin
 }
 
-Implement the Msg interface for MsgLockAssets:
-
+// 🎛 Implement the Msg interface for MsgLockAssets:
 func (msg MsgLockAssets) Route() string { return "loomtransfer" }
 func (msg MsgLockAssets) Type() string  { return "lock_assets" }
 // ... (other necessary implementations like ValidateBasic, GetSignBytes, GetSigners)
 
-
-Define a Keeper:
-
+// 🔐 Define a Keeper:
 type Keeper struct {
     storeKey  sdk.StoreKey
     cdc       *codec.Codec
@@ -1077,8 +1074,7 @@ func (k Keeper) LockAssets(ctx sdk.Context, user sdk.AccAddress, amount sdk.Coin
     // and updating the module's state to reflect the locked asset.
 }
 
-Message Handler:
-
+// 🖐 Message Handler:
 func NewHandler(k Keeper) sdk.Handler {
     return func(ctx sdk.Context, msg sdk.Msg) sdk.Result {
         switch msg := msg.(type) {
@@ -1099,7 +1095,7 @@ func handleMsgLockAssets(ctx sdk.Context, k Keeper, msg MsgLockAssets) sdk.Resul
     // Return result
 }
 
-
+// 🏛 LoomTransferGatewayModule:
 type LoomTransferGatewayModule struct {
     LoomContractAddress string
     LockedBalances      map[string]uint256 
@@ -1123,6 +1119,9 @@ func (m *LoomTransferGatewayModule) UnlockAssets(user string, amount uint256) {
     EmitEvent("AssetUnlocked", user, amount)
 }
 ```
+
+
+
 
 
 
