@@ -970,7 +970,7 @@ withdrawTokens(1000);
 
 The depositTokens and withdrawTokens functions in the code snippets above demonstrate how to transfer Persona Coins between the Ethereum mainnet and Loom Network using the Loom Network's Transfer Gateway. .
 
-
+```
 
 
 ## Transfer Gateway Code for Loom Network and Cosmos 🌐
