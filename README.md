@@ -974,7 +974,7 @@ The depositTokens and withdrawTokens functions in the code snippets above demons
 # Transfer gateway code for Loom Network and Cosmos 
 
 Loom network side:
-
+```
 pragma solidity ^0.8.0;
 
 interface IERC20 {
@@ -1029,12 +1029,13 @@ contract LoomTransferGateway {
         admin = _newAdmin;
     }
 }
-
+```
 
 Cosmos Side:
 
 Cosmos SDK module - loomtransfer:
 
+```go
 Define Store Key:
 
 package loomtransfer
@@ -1095,7 +1096,7 @@ func handleMsgLockAssets(ctx sdk.Context, k Keeper, msg MsgLockAssets) sdk.Resul
     if err != nil {
         return err.Result()
     }
-    // Return some result
+    // Return result
 }
 
 
@@ -1121,7 +1122,7 @@ func (m *LoomTransferGatewayModule) UnlockAssets(user string, amount uint256) {
     m.LockedBalances[user] -= amount
     EmitEvent("AssetUnlocked", user, amount)
 }
-
+```
 
 
 
